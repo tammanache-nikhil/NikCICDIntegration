@@ -1,0 +1,25 @@
+language: objective-c
+cache: bundler
+before_script:
+- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/profile/Distribution_Navigate.mobileprovision.enc -d -a -out scripts/profile/Distribution_Navigate.mobileprovision
+- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/certs/dist.cer.enc -d -a -out scripts/certs/dist.cer
+- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/certs/dist.p12.enc -d -a -out scripts/certs/dist.p12
+- ./scripts/add-key.sh
+- ./scripts/update-bundle.sh
+script:
+- xctool -project NikTravisCICD.xcodeproj -scheme NikTravisCICD -sdk iphoneos -configuration Release OBJROOT=$PWD/build SYMROOT=$PWD/build ONLY_ACTIVE_ARCH=NO 'CODE_SIGN_RESOURCE_RULES_PATH=$(SDKROOT)/ResourceRules.plist'
+- xctool test -project NikTravisCICD.xcodeproj -scheme NikTravisCICDTests -sdk iphonesimulator
+  ONLY_ACTIVE_ARCH=NO
+after_script: 
+  - ./scripts/remove-key.sh
+after_success: 
+  - ./scripts/sign-and-upload.sh
+env:
+  global:
+  - APP_NAME="NikTravisCICD"
+  - 'DEVELOPER_NAME="iPhone Distribution: Nitin Pant"'
+  - PROFILE_NAME="Distribution_Navigate"
+  - INFO_PLIST="NikTravisCICD/Info.plist"
+  - BUNDLE_DISPLAY_NAME="NikTravisCICD"
+  - secure: hn8/Nzpivs9ee3adDJRGOirZ5K2lMFYt1cTZ/4ydkJYiMUTXvmiCVf53Hj1heSzlHFL+Jbo/+4TGAqutGuO7Lrj4kh8qALsxXXwzNMqe77UhCibqMi1MJDmh+WHJuOgvseUEAjK7DWoWgBO9h1w76c8WxLvXeJQz4v8M+l5TG36qF60Nf8twmI93epkvXkbbqzybvPGZhlesXfyddLkmT2xqrR1WF4ldoofHhufVhFlCFqCVHYRE5HUPtIzRqYFwu0WL7E537/liJA4E8gq3RUOLAe6PxOTTCaxkKxyaA70PnsDJysHZw03LkCAeRV83GZkQ+vvTFN3GvFZly0gLqicrAFW4VTJeZkBlT0TgbapNt4ZWWdysthZKgEUPygimIem0WmiFiGKg/902wYMFqlpUByPGiOn01VuX6gTwJ2O08knhi6PcFrE4h3DYOSeKU3IqDpeOw3+L2n+1ZcpE62NqEeQ1DC6ry9CpWaUizUUSFCmH+eI5zhr9rJHcl8dLpUyPzfSwF8vSuYpCQFE/lffXQ9hTk6kQfMdz/xsasWeMi5wBiJDo0h2E0VwYNPCbochhREzneQtt+2VAWAPuMvdUF089lCuCdKWs5RHLIOBtcCDj4KghqcpK/49iv3W3iZVbtKwxKSbiiSBe+vpe45UzFtL9m8mHwxzgrBYP2JQ=
+  - secure: j2LVktZ8KKbuwipyUwDeKYeCz2wiO0VYZouT9z4AMWMBEmMGZ4YGIXu/6l7No3JFov029ThDO9vTGsJL2wQI3UcxSErXbaBuUtLK3QdBWjQWA7eL4USmz59PtaNQV0Aatf6+NIrmLsXnQnr9ZCZuMF92GOJSNZS2DI1DPfSXQM/XsavwZgys2OFeW80sDz64/j2f6vbWL3Mm4mlnXGgoG/kTYOa2P0a0NPysqVKjSKZcsIT6kwyCXY5jl2V04AopDi5Qp65Y8ULgPmHZZVH8nLE6Nq87WBFLOCU7kz/H1oPs8E4M6BEcPy3afzljghqQzi6Kua1QHz/uQi1hiDpmNQhgNH9hvfIn2FSh3r1ipNtNbhuKxjhas2tcEknM1JDNoPlzKgyCUWCMJkjD+rH1OMnlp1HMwttS4mjbqshUs9YsARp3LEqClsbPVAS+WsZim+Q9sLN2h+/xjzVsDlvlmjI7U64/sYsbgTwwebYMYW8tkh8GEbeTxLL96Iz05hShzKJeCBpC05LjCy7jU2vsno6tCAGp2br1XKffjIuoa4QyZ05toWRAkIeeVkBZXoEf5xfIxJbarEw5VhnFTwO0EJL4AzrZdquNDAeF3N7Ns11Xzs0Onb2BCG41wWs41AhU3wYcovjJoSasm4539c+1nYvHmtipU4hFuXRERcUa6CI=
