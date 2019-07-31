@@ -11,9 +11,7 @@ before_script:
 - "./scripts/add-key.sh"
 - "./scripts/update-bundle.sh"
 script:
-- xcodebuild -project NikTravisCICD.xcodeproj -scheme NikTravisCICD -sdk iphoneos
-  -configuration Release OBJROOT=$PWD/build SYMROOT=$PWD/build ONLY_ACTIVE_ARCH=NO
-  HOCKEY_APP_ID=$HOCKEY_APP_ID
+- xcodebuild -project NikTravisCICD.xcodeproj -scheme NikTravisCICD -sdk iphoneos -configuration Release OBJROOT=$PWD/build SYMROOT=$PWD/build ONLY_ACTIVE_ARCH=NO HOCKEY_APP_ID=$HOCKEY_APP_ID
 after_script:
 - "./scripts/remove-key.sh"
 after_success:
@@ -21,7 +19,7 @@ after_success:
 env:
   global:
   - APP_NAME="NikTravisCICD"
-  - 'DEVELOPER_NAME="iPhone Distribution: Nitin Pant"'
+  - 'DEVELOPER_NAME="iPhone Distribution: Nitin Pant (6LJ9Y6X5NU)"'
   - PROFILE_NAME="Distribution_Navigate"
   - INFO_PLIST="NikTravisCICD/Info.plist"
   - BUNDLE_DISPLAY_NAME="NikTravisCICD"
