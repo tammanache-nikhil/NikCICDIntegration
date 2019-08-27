@@ -1,0 +1,6 @@
+version: "Apple Swift version 5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
+options: "02e75661edaa233ba6292bd15b2289ef"
+build_time: [1564605969, 831058000]
+inputs:
+  "/Users/ntammanache/Nikhil/POC/NikCICDIntegration/NikTravisCICD/ViewController.swift": [9223372036, 854775807]
+  "/Users/ntammanache/Nikhil/POC/NikCICDIntegration/NikTravisCICD/AppDelegate.swift": [9223372036, 854775807]
